@@ -29,6 +29,8 @@ Use this skill when the user:
 
 ### Python API (Recommended for Agents)
 
+The skill scripts are located in `.cursor/skills/paper-management/scripts/` with a convenience symlink at `paper_management/` for easy importing.
+
 ```python
 from paper_management.paper_skill import add_paper_auto
 
@@ -53,8 +55,8 @@ else:
 ### CLI Method (Alternative)
 
 ```bash
-cd paper_management
-python research.py papers add "<paper_url_or_name>" --priority high --tags "tag1,tag2"
+# From workspace root
+python paper_management/research.py papers add "<paper_url_or_name>" --priority high --tags "tag1,tag2"
 ```
 
 ## Step-by-Step Instructions
@@ -155,10 +157,12 @@ Common errors and how to handle them:
 
 ## Important Notes
 
-- Always run from workspace root or ensure correct path to `paper_management/`
-- The skill requires internet access to fetch metadata
-- BibTeX entries with arXiv URLs will fetch additional metadata from arXiv
-- Tag suggestions are automatic but user can override with `additional_tags`
+- **Structure**: Scripts are in `.cursor/skills/paper-management/scripts/` with a `paper_management/` symlink for compatibility
+- **Data Directories**: This repo contains only tools. See `DATA_DIRECTORIES.md` for setting up paper storage in your private repo
+- **Running**: Always run scripts from workspace root
+- **Internet**: The skill requires internet access to fetch metadata from arXiv API
+- **BibTeX**: BibTeX entries with arXiv URLs will fetch additional metadata from arXiv
+- **Tags**: Tag suggestions are automatic but can be extended with `additional_tags`
 
 ## Reference Files
 

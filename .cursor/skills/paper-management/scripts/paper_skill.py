@@ -35,11 +35,13 @@ from pathlib import Path
 from typing import Dict, Optional, List
 from datetime import datetime
 
+# Ensure the script directory is in the path for local imports
+BASE_DIR = Path(__file__).resolve().parent
+if str(BASE_DIR) not in sys.path:
+    sys.path.insert(0, str(BASE_DIR))
+
+# Import from local directory (works for both direct execution and symlink)
 from paper_fetcher import fetch_paper_metadata, suggest_tags_from_metadata, detect_input_type
-
-BASE_DIR = Path(__file__).parent
-sys.path.insert(0, str(BASE_DIR))
-
 from research import PaperManager
 
 
