@@ -48,6 +48,19 @@ class PaperTodoManager:
     def __init__(self):
         self.todos = self._load_todos()
     
+    def _regenerate_dashboard(self):
+        """Regenerate the HTML dashboard after changes"""
+        try:
+            import subprocess
+            dashboard_script = BASE_DIR / "generate_dashboard.py"
+            if dashboard_script.exists():
+                subprocess.run([sys.executable, str(dashboard_script)], 
+                             cwd=str(BASE_DIR.parent), 
+                             capture_output=True, 
+                             timeout=10)
+        except Exception:
+            pass
+    
     def _load_todos(self) -> Dict:
         """Load paper TODOs from JSON file"""
         if not PAPER_TODOS_FILE.exists():
@@ -63,6 +76,8 @@ class PaperTodoManager:
         PAPER_TODOS_FILE.parent.mkdir(parents=True, exist_ok=True)
         with open(PAPER_TODOS_FILE, 'w', encoding='utf-8') as f:
             json.dump(self.todos, f, indent=2, ensure_ascii=False)
+        
+        self._regenerate_dashboard()
     
     def find_paper_key(self, paper_title: str) -> Optional[str]:
         """Find paper key by title (case-insensitive partial match)"""

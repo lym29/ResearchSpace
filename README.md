@@ -13,7 +13,8 @@ Intelligent paper organization system with automatic metadata fetching from arXi
 - AI agent-friendly API
 - Reading list management with priorities and ratings
 - Full-text search across papers
-- **NEW:** TODO list management for papers - organize reading tasks and track progress
+- TODO list management for papers - organize reading tasks and track progress
+- **NEW:** Beautiful HTML dashboard for visualizing reading progress
 
 **Quick Start:**
 ```bash
@@ -27,6 +28,10 @@ python research.py papers add "https://arxiv.org/abs/1706.03762"
 python research.py todos create "Attention Is All You Need"
 python research.py todos add "Attention" "Read the introduction"
 python research.py todos complete "Attention" 0
+
+# Generate HTML dashboard
+python research.py dashboard
+# Open reading_progress.html in your browser!
 ```
 
 [→ View Paper Management Documentation](paper_management/README.md)  
