@@ -220,5 +220,5 @@ python .cursor/skills/paper-management/scripts/research.py papers add "<input>" 
 - Main tool: `.cursor/skills/paper-management/scripts/research.py`
 - Skill API: `.cursor/skills/paper-management/scripts/paper_skill.py`
 - Metadata fetcher: `.cursor/skills/paper-management/scripts/paper_fetcher.py`
-- Paper data: User's workspace - `papers/to_read.json`, `papers/read.json` (see references/SETUP_GUIDE.md)
+- Paper data: User's workspace - `papers/to_read.json`, `papers/read.json`
 - Dependencies: `.cursor/skills/paper-management/scripts/requirements.txt`
