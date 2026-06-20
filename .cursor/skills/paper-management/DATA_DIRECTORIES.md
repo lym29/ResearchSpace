@@ -1,77 +1,199 @@
-# Data Directories
+# Data Storage Configuration
 
-This document explains how to set up the data directories for paper management.
+This document explains how to configure data storage for the paper management skill.
 
-## Architecture
+## Overview
 
-The ResearchSpace repository contains only the **tools and skills** for managing research papers. Your actual research data (papers and notes) should be stored in a **private repository** to protect your personal information.
+The paper management skill stores your research data (paper metadata, notes, reading progress) in JSON files on your local filesystem. **You choose where to store this data** - it can be anywhere on your system.
 
-## Required Directories
+## Default Location
 
-The paper management system expects two directories:
+By default, the skill looks for data files in these locations relative to where you run the scripts:
 
-- `paper_management/notes/` - For storing paper notes and annotations
-- `paper_management/papers/` - For storing paper metadata JSON files
+```
+your-workspace/
+├── papers/
+│   ├── read.json           # Papers you've finished reading
+│   ├── to_read.json        # Papers in your reading queue
+│   └── paper_todos.json    # TODO lists for papers
+└── notes/
+    └── [your paper notes]  # Notes and annotations
+```
 
-These directories are `.gitignore`d in the public ResearchSpace repo and should only exist in your private repository.
+## Quick Setup
 
-## Setup Instructions
+### Option 1: Use Default Locations
 
-### Option 1: Using ResearchSpace as a Git Submodule (Recommended)
+Create the data directories in your workspace:
 
-1. In your private repository (e.g., `ResearchProgress`):
-   ```bash
-   # Add ResearchSpace as a submodule
-   git submodule add https://github.com/lym29/ResearchSpace.git
-   
-   # Create the data directories in your private repo
-   mkdir -p paper_management/notes
-   mkdir -p paper_management/papers
-   
-   # Initialize the required JSON files
-   echo "[]" > paper_management/papers/read.json
-   echo "[]" > paper_management/papers/to_read.json
-   echo "[]" > paper_management/papers/paper_todos.json
-   ```
+```bash
+mkdir -p papers notes
 
-2. The skills from the ResearchSpace submodule can then operate on the data directories in your private repo.
+# Initialize the required JSON files
+echo "[]" > papers/read.json
+echo "[]" > papers/to_read.json
+echo "[]" > papers/paper_todos.json
+```
 
-3. Update the submodule when new features are added:
-   ```bash
-   git submodule update --remote ResearchSpace
-   ```
+That's it! The skill will now work in your workspace.
 
-### Option 2: Clone and Create Directories
+### Option 2: Custom Locations (Coming Soon)
 
-If not using submodules:
+In a future update, you'll be able to configure custom paths via environment variables:
 
-1. Clone ResearchSpace to your local machine
-2. Create the directories:
-   ```bash
-   mkdir -p paper_management/notes
-   mkdir -p paper_management/papers
-   ```
-3. Initialize the JSON files as shown above
+```bash
+export RESEARCH_PAPERS_DIR="/path/to/my/papers"
+export RESEARCH_NOTES_DIR="/path/to/my/notes"
+```
 
-## Benefits of This Architecture
+## Storage Recommendations
 
-- **Privacy**: Your research data stays private
-- **Updates**: Get skill improvements from the public repo
-- **Separation**: Clear boundary between tools (public) and data (private)
-- **Flexibility**: Can use the same skills across multiple private repos
+### Keep Your Data Private
 
-## Example Files
+Your research data is yours alone. We recommend:
 
-ResearchSpace provides example templates for setting up your private repository:
+- Store data in a **private Git repository** (separate from this public skills repo)
+- Use **git submodules** to include ResearchSpace skills in your private workspace
+- Add data directories to your `.gitignore` if you don't want to version them
 
-- `example_private_repo.gitignore` - Example .gitignore for your private repo
-- `example_private_repo_README.md` - Example README for your private repo
-- `PRIVATE_REPO_GUIDE.md` - Complete setup and usage guide
+### Backup Your Data
+
+Since your research data is stored as JSON files:
+
+- ✅ Easy to back up with any backup tool
+- ✅ Can version control with Git
+- ✅ Portable across machines
+- ✅ Human-readable format
+
+### Organize Your Workspace
+
+**Recommended structure:**
+
+```
+my-research-workspace/          # Your private repository
+├── .cursor/
+│   └── skills/
+│       └── research/           # ResearchSpace as submodule
+├── papers/                     # Your paper data
+├── notes/                      # Your notes
+├── projects/                   # Your research projects
+└── .gitignore                  # Ignore or track data as you prefer
+```
+
+## Working with Git Submodules
+
+### Add ResearchSpace to Your Workspace
+
+```bash
+cd your-research-workspace
+git submodule add https://github.com/lym29/ResearchSpace.git .cursor/skills/research
+
+# Set up data directories
+mkdir -p papers notes
+echo "[]" > papers/read.json
+echo "[]" > papers/to_read.json  
+echo "[]" > papers/paper_todos.json
+
+# Commit the structure
+git add .
+git commit -m "Add ResearchSpace skills and initialize data directories"
+```
+
+### Update Skills to Latest Version
+
+```bash
+git submodule update --remote .cursor/skills/research
+git commit -am "Update ResearchSpace skills"
+```
+
+## Data File Formats
+
+### papers/to_read.json
+```json
+[
+  {
+    "title": "Attention Is All You Need",
+    "authors": "Vaswani et al.",
+    "url": "https://arxiv.org/abs/1706.03762",
+    "summary": "Paper abstract...",
+    "tags": ["transformers", "nlp"],
+    "priority": "high",
+    "added_date": "2024-01-15"
+  }
+]
+```
+
+### papers/read.json
+```json
+[
+  {
+    "title": "BERT: Pre-training of Deep Bidirectional Transformers",
+    "authors": "Devlin et al.",
+    "url": "https://arxiv.org/abs/1810.04805",
+    "summary": "Paper abstract...",
+    "tags": ["bert", "nlp", "pretraining"],
+    "rating": 5,
+    "read_date": "2024-01-20",
+    "notes": "Revolutionary approach to pretraining..."
+  }
+]
+```
+
+### papers/paper_todos.json
+```json
+[
+  {
+    "paper_title": "Attention Is All You Need",
+    "todos": [
+      {
+        "task": "Read introduction and motivation",
+        "completed": true,
+        "completed_date": "2024-01-16"
+      },
+      {
+        "task": "Understand multi-head attention mechanism",
+        "completed": false
+      }
+    ],
+    "created_date": "2024-01-15"
+  }
+]
+```
+
+## Troubleshooting
+
+### "File not found" errors
+
+Make sure you're running commands from your workspace root where the `papers/` and `notes/` directories exist.
+
+### Data not persisting
+
+Check that JSON files are properly initialized and have write permissions:
+
+```bash
+ls -la papers/
+# Should show read.json, to_read.json, paper_todos.json
+```
+
+### Working across machines
+
+To sync your research data across devices:
+
+1. Store your workspace in a Git repository
+2. Commit and push your data files
+3. Pull on other machines
+
+Or use cloud sync (Dropbox, Google Drive, etc.) for automatic syncing.
+
+## Example Templates
+
+The references folder includes helpful templates:
+
+- `example_private_repo.gitignore` - Sample .gitignore for your research workspace
+- `example_private_repo_README.md` - Template README for your workspace
+- `PRIVATE_REPO_GUIDE.md` - Detailed guide for setting up a private repository
 - `SETUP_PRIVATE_REPO.sh` - Automated setup script
 
-## Notes
+## Need Help?
 
-- The data directories will be automatically ignored by git in ResearchSpace
-- Make sure to back up your private repository regularly
-- You can customize the skills in your private repo by creating a fork
-- When running scripts, always run from the root of your private repository
+See the [complete skill documentation](SKILL.md) or [API reference](references/api_reference.md) for more information.
