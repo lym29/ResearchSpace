@@ -48,8 +48,8 @@ python .cursor/skills/paper-management/scripts/research.py dashboard
 # Open reading_progress.html in your browser!
 ```
 
-[→ View Paper Management Documentation](.cursor/skills/paper-management/scripts/README.md)  
-[→ View TODO List Skill Documentation](.cursor/skills/paper-management/scripts/TODO_SKILL_README.md)  
+[→ View Paper Management Documentation](.cursor/skills/paper-management/references/README.md)  
+[→ View TODO List Skill Documentation](.cursor/skills/paper-management/references/TODO_SKILL_README.md)  
 [→ View Cursor Skill Definition](.cursor/skills/paper-management/SKILL.md)
 
 ## 🚀 Quick Navigation
@@ -119,13 +119,18 @@ ResearchSpace/
 │       └── paper-management/      # Cursor skill for AI agents
 │           ├── SKILL.md           # Skill definition and instructions
 │           ├── DATA_DIRECTORIES.md # Setup guide for private repos
-│           ├── scripts/           # Python implementation
+│           ├── scripts/           # Python implementation (code only)
 │           │   ├── research.py    # CLI tool
 │           │   ├── paper_skill.py # Agent API
 │           │   ├── paper_fetcher.py
 │           │   ├── generate_dashboard.py
 │           │   └── requirements.txt
-│           └── references/        # API documentation
+│           └── references/        # Documentation
+│               ├── README.md
+│               ├── TODO_SKILL_README.md
+│               ├── USAGE_EXAMPLES.md
+│               ├── api_reference.md
+│               └── tag_taxonomy.md
 ├── ROADMAP.md                     # Development plans
 └── README.md                      # This file
 ```
