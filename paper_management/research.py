@@ -622,5 +622,177 @@ def stats():
     click.echo()
 
 
+@cli.group()
+def todos():
+    """Manage TODO lists for papers"""
+    pass
+
+
+@todos.command('create')
+@click.argument('title')
+@click.option('--priority', '-p', type=click.Choice(['low', 'medium', 'high']),
+              default='medium', help='Priority level')
+@click.option('--notes', '-n', help='Notes about reading plan')
+def create_todos(title, priority, notes):
+    """Create a TODO list for a paper"""
+    from paper_todo_skill import create_paper_todo
+    
+    result = create_paper_todo(title, priority=priority, notes=notes)
+    
+    if result['success']:
+        click.echo(f"{Fore.GREEN}✓{Style.RESET_ALL} {result['message']}")
+    else:
+        click.echo(f"{Fore.RED}✗{Style.RESET_ALL} {result['message']}")
+        sys.exit(1)
+
+
+@todos.command('add')
+@click.argument('title')
+@click.argument('todo_text', nargs=-1, required=True)
+def add_todo(title, todo_text):
+    """Add a TODO item to a paper's list"""
+    from paper_todo_skill import add_todo_item
+    
+    todo_text_str = ' '.join(todo_text)
+    result = add_todo_item(title, todo_text_str)
+    
+    if result['success']:
+        click.echo(f"{Fore.GREEN}✓{Style.RESET_ALL} {result['message']}")
+    else:
+        click.echo(f"{Fore.RED}✗{Style.RESET_ALL} {result['message']}")
+        sys.exit(1)
+
+
+@todos.command('complete')
+@click.argument('title')
+@click.argument('todo_ref', nargs=-1, required=True)
+def complete_todo(title, todo_ref):
+    """Mark a TODO item as complete (by text or index)"""
+    from paper_todo_skill import mark_todo_complete
+    
+    todo_ref_str = ' '.join(todo_ref)
+    
+    if todo_ref_str.isdigit():
+        result = mark_todo_complete(title, todo_index=int(todo_ref_str))
+    else:
+        result = mark_todo_complete(title, todo_text=todo_ref_str)
+    
+    if result['success']:
+        click.echo(f"{Fore.GREEN}✓{Style.RESET_ALL} {result['message']}")
+    else:
+        click.echo(f"{Fore.RED}✗{Style.RESET_ALL} {result['message']}")
+        sys.exit(1)
+
+
+@todos.command('incomplete')
+@click.argument('title')
+@click.argument('todo_ref', nargs=-1, required=True)
+def incomplete_todo(title, todo_ref):
+    """Mark a TODO item as incomplete"""
+    from paper_todo_skill import mark_todo_incomplete
+    
+    todo_ref_str = ' '.join(todo_ref)
+    
+    if todo_ref_str.isdigit():
+        result = mark_todo_incomplete(title, todo_index=int(todo_ref_str))
+    else:
+        result = mark_todo_incomplete(title, todo_text=todo_ref_str)
+    
+    if result['success']:
+        click.echo(f"{Fore.GREEN}✓{Style.RESET_ALL} {result['message']}")
+    else:
+        click.echo(f"{Fore.RED}✗{Style.RESET_ALL} {result['message']}")
+        sys.exit(1)
+
+
+@todos.command('list')
+@click.argument('title', required=False)
+@click.option('--show-completed/--hide-completed', default=True,
+              help='Show or hide completed items')
+def list_todos(title, show_completed):
+    """List TODO items for a paper (or all papers)"""
+    from paper_todo_skill import format_todo_list
+    
+    output = format_todo_list(title, show_completed)
+    click.echo(output)
+
+
+@todos.command('delete')
+@click.argument('title')
+@click.argument('todo_ref', nargs=-1, required=False)
+@click.option('--all', 'delete_all', is_flag=True,
+              help='Delete entire TODO list for the paper')
+def delete_todo(title, todo_ref, delete_all):
+    """Delete a TODO item or entire list"""
+    if delete_all:
+        from paper_todo_skill import delete_paper_todos
+        result = delete_paper_todos(title)
+        
+        if result['success']:
+            click.echo(f"{Fore.GREEN}✓{Style.RESET_ALL} {result['message']}")
+        else:
+            click.echo(f"{Fore.RED}✗{Style.RESET_ALL} {result['message']}")
+            sys.exit(1)
+    else:
+        if not todo_ref:
+            click.echo(f"{Fore.RED}✗{Style.RESET_ALL} Must specify TODO item or use --all flag")
+            sys.exit(1)
+        
+        from paper_todo_skill import delete_todo_item
+        
+        todo_ref_str = ' '.join(todo_ref)
+        
+        if todo_ref_str.isdigit():
+            result = delete_todo_item(title, todo_index=int(todo_ref_str))
+        else:
+            result = delete_todo_item(title, todo_text=todo_ref_str)
+        
+        if result['success']:
+            click.echo(f"{Fore.GREEN}✓{Style.RESET_ALL} {result['message']}")
+        else:
+            click.echo(f"{Fore.RED}✗{Style.RESET_ALL} {result['message']}")
+            sys.exit(1)
+
+
+@todos.command('stats')
+@click.argument('title', required=False)
+def todo_stats(title):
+    """Show TODO statistics"""
+    from paper_todo_skill import get_todo_stats
+    
+    result = get_todo_stats(title)
+    
+    if not result['success']:
+        click.echo(f"{Fore.RED}✗{Style.RESET_ALL} {result['message']}")
+        sys.exit(1)
+    
+    stats = result['stats']
+    
+    if isinstance(stats, list):
+        click.echo(f"\n{Fore.CYAN}TODO Statistics (All Papers){Style.RESET_ALL}")
+        click.echo(f"{Fore.CYAN}{'='*70}{Style.RESET_ALL}\n")
+        
+        for stat in sorted(stats, key=lambda x: x['progress'], reverse=True):
+            progress_bar = '█' * int(stat['progress'] / 10) + '░' * (10 - int(stat['progress'] / 10))
+            priority_color = {
+                'high': Fore.RED,
+                'medium': Fore.YELLOW,
+                'low': Fore.GREEN
+            }.get(stat['priority'], '')
+            
+            click.echo(f"{stat['paper'][:50]}")
+            click.echo(f"  {progress_bar} {stat['progress']:.0f}% "
+                      f"({stat['completed']}/{stat['total']}) "
+                      f"- {priority_color}Priority: {stat['priority']}{Style.RESET_ALL}")
+            click.echo()
+    else:
+        click.echo(f"\n{Fore.CYAN}TODO Statistics{Style.RESET_ALL}")
+        click.echo(f"{Fore.CYAN}{'='*70}{Style.RESET_ALL}\n")
+        click.echo(f"Paper: {stats['paper']}")
+        click.echo(f"Progress: {stats['completed']}/{stats['total']} ({stats['progress']:.0f}%)")
+        click.echo(f"Remaining: {stats['remaining']}")
+        click.echo()
+
+
 if __name__ == '__main__':
     cli()
