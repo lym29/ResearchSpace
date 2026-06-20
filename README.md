@@ -1,146 +1,157 @@
 # ResearchSpace
 
-A personal research organization system with AI-agent-friendly tools for managing papers, notes, and research activities.
+A curated collection of **Cursor AI Skills** for academic research and paper management. These skills work automatically with Cursor AI agents to help you organize, read, and track research papers.
 
-## 🔒 Privacy-First Architecture
+## 🎯 What is ResearchSpace?
 
-ResearchSpace is designed to keep your research data private:
+ResearchSpace provides AI-ready tools for researchers using Cursor IDE. Instead of running scripts manually, you interact naturally with Cursor AI agents, and they use these skills automatically.
 
-- **This repository contains only the tools and skills** - no personal research data
-- **Your data stays in your private repository** - use ResearchSpace as a git submodule
-- **Clear separation** - Tools are public, your notes and papers remain private
+**Example interactions:**
+- "Add this paper: https://arxiv.org/abs/1706.03762"
+- "Create a reading plan for the Attention Is All You Need paper"
+- "Show me all papers tagged with transformers"
+
+## 🚀 Quick Start
+
+### Option 1: Use as Git Submodule (Recommended)
+
+Add ResearchSpace to your research workspace:
+
+```bash
+cd your-research-workspace
+git submodule add https://github.com/lym29/ResearchSpace.git .cursor/skills/research
+```
+
+Cursor will automatically discover and load these skills!
+
+### Option 2: Clone Directly
+
+```bash
+git clone https://github.com/lym29/ResearchSpace.git
+cd ResearchSpace
+```
+
+Open the folder in Cursor, and the skills are ready to use.
+
+### Option 3: Global Skills (All Projects)
+
+Install skills globally for all your Cursor projects:
+
+```bash
+git clone https://github.com/lym29/ResearchSpace.git ~/.cursor/skills/research
+```
+
+## 📚 Available Skills
+
+### Paper Management (`paper-management`)
+
+Automatically fetch and organize research papers from various sources.
+
+**What it does:**
+- Fetches paper metadata from arXiv, HuggingFace, and more
+- Auto-suggests relevant tags based on content
+- Manages reading lists with priorities
+- Creates TODO lists for papers
+- Tracks reading progress
+
+**Sources supported:**
+- arXiv URLs or IDs
+- HuggingFace paper pages
+- BibTeX citations
+- Paper names (searches automatically)
+
+**Example usage with Cursor AI:**
+- "Add the Attention Is All You Need paper to my reading list"
+- "I need to read https://arxiv.org/abs/2303.08774, mark it as high priority"
+- "Create a TODO list for studying the Transformer paper"
+- "Mark the introduction of the Attention paper as complete"
+
+[→ View full skill documentation](.cursor/skills/paper-management/SKILL.md)
+
+## 🏗️ Repository Structure
+
+```
+ResearchSpace/
+├── .cursor/
+│   └── skills/
+│       └── paper-management/      # Paper management skill
+│           ├── SKILL.md           # Skill definition (auto-loaded by Cursor)
+│           ├── scripts/           # Implementation
+│           └── references/        # Detailed documentation
+├── README.md                      # This file
+└── ROADMAP.md                     # Future skills and features
+```
+
+## 🔒 Data Privacy
+
+**Important:** This repository contains only the *skills* (tools), not your research data.
+
+Your personal research data (papers, notes, reading progress) should be stored in a **private repository**. ResearchSpace is designed to work as a submodule in your private workspace.
 
 [→ Learn how to set up with a private repository](.cursor/skills/paper-management/DATA_DIRECTORIES.md)
 
-## 🗂️ Tools
+## 💡 How Cursor Skills Work
 
-### 📚 Paper Management
+1. **Automatic Discovery**: When you open a workspace, Cursor scans `.cursor/skills/` folders
+2. **Context-Aware**: Skills activate automatically based on your conversation
+3. **Natural Language**: Just describe what you want - the AI handles the rest
+4. **No Manual Setup**: Skills work immediately, no installation required
 
-Intelligent paper organization system with automatic metadata fetching from arXiv, HuggingFace, BibTeX, and paper name search.
+## 🎓 For Developers
 
-**Structure:**
-- **Skill Definition**: `.cursor/skills/paper-management/SKILL.md` - Instructions for AI agents
-- **Scripts**: `.cursor/skills/paper-management/scripts/` - Python implementation
-- **Documentation**: Available in the scripts folder
+### Using Skills Programmatically
 
-**Features:**
-- Automatic metadata fetching from multiple sources
-- Smart tag suggestions based on paper content
-- AI agent-friendly API with Cursor skill integration
-- Reading list management with priorities and ratings
-- Full-text search across papers
-- TODO list management for papers - organize reading tasks and track progress
-- Beautiful HTML dashboard for visualizing reading progress
-
-**Quick Start:**
-```bash
-# Install dependencies (from workspace root)
-pip install -r .cursor/skills/paper-management/scripts/requirements.txt
-
-# Add a paper
-python .cursor/skills/paper-management/scripts/research.py papers add "https://arxiv.org/abs/1706.03762"
-
-# Create a TODO list for reading
-python .cursor/skills/paper-management/scripts/research.py todos create "Attention Is All You Need"
-
-# Generate HTML dashboard
-python .cursor/skills/paper-management/scripts/research.py dashboard
-# Open reading_progress.html in your browser!
-```
-
-[→ View Paper Management Documentation](.cursor/skills/paper-management/references/README.md)  
-[→ View TODO List Skill Documentation](.cursor/skills/paper-management/references/TODO_SKILL_README.md)  
-[→ View Cursor Skill Definition](.cursor/skills/paper-management/SKILL.md)
-
-## 🚀 Quick Navigation
-
-- **Cursor Skills**: [`.cursor/skills/`](.cursor/skills/) - AI agent skill definitions
-- **Paper Management Scripts**: [`.cursor/skills/paper-management/scripts/`](.cursor/skills/paper-management/scripts/) - Implementation code
-- **Roadmap**: [`ROADMAP.md`](ROADMAP.md) - Future features and development plans
-- **Setup Guide**: [`.cursor/skills/paper-management/DATA_DIRECTORIES.md`](.cursor/skills/paper-management/DATA_DIRECTORIES.md) - Private repo setup instructions
-
-## 📋 High-Level Goals
-
-- [x] Paper tracking and organization system
-- [x] AI agent-friendly paper management skill
-- [ ] Note-taking and annotation system
-- [ ] Citation management
-- [ ] Research analytics and insights
-- [ ] Project organization
-- [ ] Research planning and goals
-- [ ] Collaboration tools
-
-## 🤖 For AI Agents
-
-This repository is designed to be agent-friendly with **Cursor Skills** for automatic discovery:
-
-### 📝 Available Skills (`.cursor/skills/`)
-
-- **`paper-management`** - Add and organize papers from arXiv, HuggingFace, BibTeX, or by name with automatic metadata fetching
-
-**How Skills Work:**
-- Skills are automatically discovered by Cursor AI agents
-- Agents use skills when relevant based on conversation context
-- Skills provide step-by-step instructions and access to scripts
-
-**Example Agent Interactions:**
-- "Add this paper: https://arxiv.org/abs/1706.03762"
-- "Create a reading plan for the Attention paper"
-- "I finished reading the introduction, mark it complete"
-
-### Direct API Usage
-
-The paper management system also provides clean Python APIs for programmatic use:
+While skills are designed for AI agents, you can also use them directly:
 
 ```python
 import sys
 sys.path.insert(0, '.cursor/skills/paper-management/scripts')
 
 from paper_skill import add_paper_auto
-from paper_todo_skill import create_paper_todo
 
-# Add paper
 result = add_paper_auto("https://arxiv.org/abs/1706.03762", priority="high")
-
-# Create TODO list
-create_paper_todo(result['paper']['title'], todos=["Read intro", "Understand arch"])
+print(f"Added: {result['paper']['title']}")
 ```
 
-**Note**: For AI agents using Cursor, the skill is automatically available - no manual imports needed!
+### CLI Access
 
-[→ View Skill Documentation](.cursor/skills/paper-management/SKILL.md)
-
-## 📖 Repository Structure
-
-```
-ResearchSpace/
-├── .cursor/
-│   └── skills/
-│       └── paper-management/      # Cursor skill for AI agents
-│           ├── SKILL.md           # Skill definition and instructions
-│           ├── DATA_DIRECTORIES.md # Setup guide for private repos
-│           ├── scripts/           # Python implementation (code only)
-│           │   ├── research.py    # CLI tool
-│           │   ├── paper_skill.py # Agent API
-│           │   ├── paper_fetcher.py
-│           │   ├── generate_dashboard.py
-│           │   └── requirements.txt
-│           └── references/        # Documentation
-│               ├── README.md
-│               ├── TODO_SKILL_README.md
-│               ├── USAGE_EXAMPLES.md
-│               ├── api_reference.md
-│               └── tag_taxonomy.md
-├── ROADMAP.md                     # Development plans
-└── README.md                      # This file
+```bash
+python .cursor/skills/paper-management/scripts/research.py papers add "https://arxiv.org/abs/1706.03762"
 ```
 
-**Note**: Paper data (`papers/`, `notes/`) directories are not included in this repo. See [DATA_DIRECTORIES.md](.cursor/skills/paper-management/DATA_DIRECTORIES.md) for setup instructions.
+## 🗺️ Roadmap
+
+Planned skills for researchers:
+
+- **Note-taking and Annotation**: AI-assisted paper notes and highlights
+- **Citation Management**: Bibliography generation and citation tracking
+- **Literature Review**: Automated literature mapping and gap analysis
+- **Research Analytics**: Reading patterns and topic clustering
+- **Collaboration**: Share reading lists and notes with team members
+
+[→ View detailed roadmap](ROADMAP.md)
 
 ## 🤝 Contributing
 
-This is a personal research space designed to grow with research needs. Each tool is modular and can be adapted independently.
+ResearchSpace is designed to grow with the research community:
+
+- **Add new skills**: Create skills for your research workflow
+- **Improve existing skills**: Enhance paper management features
+- **Share feedback**: Report issues or suggest improvements
+
+Each skill is modular and independent, making it easy to contribute!
+
+## 📖 Learn More
+
+- [Paper Management Skill Documentation](.cursor/skills/paper-management/references/README.md)
+- [API Reference](.cursor/skills/paper-management/references/api_reference.md)
+- [Usage Examples](.cursor/skills/paper-management/references/USAGE_EXAMPLES.md)
+- [Cursor Skills Documentation](https://cursor.com/docs/context/skills)
 
 ## 📄 License
 
-MIT License - Feel free to adapt for your own use!
+MIT License - Feel free to use and adapt for your research needs!
+
+---
+
+**Built for researchers using Cursor AI** 🔬 + 🤖
