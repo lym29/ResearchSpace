@@ -7,13 +7,27 @@ A personal research organization system for managing papers, notes, and research
 ### 📚 Paper Management
 Track papers you want to read and papers you've already read with full metadata, notes, and search capabilities.
 
+### 🤖 AI Agent-Friendly Paper Skill
+Automatically fetch and organize papers from various sources:
+- **arXiv** (URLs or IDs)
+- **HuggingFace Papers** (paper links)
+- **BibTeX** (paste entire citation)
+- **Paper Names** (automatic search)
+
+See [PAPER_SKILL.md](PAPER_SKILL.md) for detailed documentation and agent integration examples.
+
 ## Quick Start
 
 ```bash
 # Install dependencies
 pip install -r requirements.txt
 
-# Add a paper to your reading list
+# 🚀 NEW: Add papers automatically with the Paper Management Skill!
+# Just provide an arXiv URL, ID, HuggingFace link, BibTeX, or paper name
+python research.py papers add "https://arxiv.org/abs/1706.03762"
+python research.py papers add "Attention Is All You Need" --priority high
+
+# Or use the manual method
 python research.py papers add-to-read "Paper Title" --authors "Author Name" --url "https://arxiv.org/..."
 
 # Mark a paper as read
@@ -41,16 +55,37 @@ ResearchSpace/
 
 ## Paper Management Commands
 
-### Adding Papers
+### Adding Papers (Automatic - Recommended! 🚀)
 ```bash
-# Add to reading list
+# Add by arXiv URL - automatically fetches all metadata!
+python research.py papers add "https://arxiv.org/abs/1706.03762" --priority high
+
+# Add by arXiv ID
+python research.py papers add "1706.03762"
+
+# Add by paper name - searches arXiv automatically!
+python research.py papers add "Attention Is All You Need" --tags "must-read"
+
+# Add by HuggingFace paper link
+python research.py papers add "https://huggingface.co/papers/2303.08774"
+
+# Preview before adding
+python research.py papers add "1706.03762" --preview
+
+# Add directly to read list
+python research.py papers add "Attention Is All You Need" --read --rating 5
+```
+
+### Adding Papers (Manual)
+```bash
+# Add to reading list (manual entry)
 python research.py papers add-to-read "Attention Is All You Need" \
     --authors "Vaswani et al." \
     --url "https://arxiv.org/abs/1706.03762" \
     --tags "transformers,nlp" \
     --priority high
 
-# Add directly as read
+# Add directly as read (manual entry)
 python research.py papers add-read "Paper Title" \
     --authors "Authors" \
     --url "URL" \

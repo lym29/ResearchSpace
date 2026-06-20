@@ -298,6 +298,89 @@ def papers():
     pass
 
 
+@papers.command('add')
+@click.argument('input_str', required=False)
+@click.option('--priority', '-p', type=click.Choice(['low', 'medium', 'high']), 
+              default='medium', help='Reading priority')
+@click.option('--tags', '-t', help='Additional comma-separated tags')
+@click.option('--notes', '-n', help='Additional notes')
+@click.option('--read', '-r', is_flag=True, help='Add to read list instead of to-read')
+@click.option('--rating', type=click.IntRange(1, 5), help='Rating (1-5) if marking as read')
+@click.option('--preview', is_flag=True, help='Preview paper info without adding')
+def add_paper(input_str, priority, tags, notes, read, rating, preview):
+    """
+    Add a paper automatically by fetching metadata from various sources
+    
+    Supports:
+    - arXiv URLs or IDs (https://arxiv.org/abs/1706.03762 or 1706.03762)
+    - HuggingFace paper URLs (https://huggingface.co/papers/...)
+    - BibTeX entries (paste the entire @article{...} block)
+    - Paper names (will search arXiv)
+    
+    Examples:
+      python research.py papers add "https://arxiv.org/abs/1706.03762"
+      python research.py papers add "1706.03762" --priority high
+      python research.py papers add "Attention Is All You Need" --tags "must-read"
+    """
+    if not input_str:
+        click.echo(f"{Fore.YELLOW}Please provide a paper URL, ID, BibTeX, or name{Style.RESET_ALL}")
+        click.echo("\nExamples:")
+        click.echo('  papers add "https://arxiv.org/abs/1706.03762"')
+        click.echo('  papers add "1706.03762" --priority high')
+        click.echo('  papers add "Attention Is All You Need"')
+        sys.exit(1)
+    
+    try:
+        from paper_skill import add_paper_auto, search_and_preview, format_paper_info
+        
+        if preview:
+            result = search_and_preview(input_str)
+            if result['success']:
+                metadata = result['metadata']
+                click.echo(f"\n{Fore.CYAN}Paper Preview{Style.RESET_ALL}")
+                click.echo(f"{Fore.CYAN}{'='*70}{Style.RESET_ALL}")
+                click.echo(f"{Fore.GREEN}Title:{Style.RESET_ALL} {metadata['title']}")
+                click.echo(f"{Fore.GREEN}Authors:{Style.RESET_ALL} {metadata['authors']}")
+                click.echo(f"{Fore.GREEN}URL:{Style.RESET_ALL} {metadata['url']}")
+                click.echo(f"{Fore.GREEN}Suggested Tags:{Style.RESET_ALL} {', '.join(result['suggested_tags'])}")
+                if metadata.get('summary'):
+                    summary = metadata['summary'][:300] + ('...' if len(metadata['summary']) > 300 else '')
+                    click.echo(f"{Fore.GREEN}Summary:{Style.RESET_ALL} {summary}")
+            else:
+                click.echo(f"{Fore.RED}✗{Style.RESET_ALL} {result['message']}")
+        else:
+            tag_list = [t.strip() for t in tags.split(',') if t.strip()] if tags else []
+            
+            result = add_paper_auto(
+                input_str,
+                priority=priority,
+                additional_tags=tag_list,
+                additional_notes=notes,
+                mark_as_read=read,
+                rating=rating
+            )
+            
+            if result['success']:
+                click.echo(f"\n{Fore.GREEN}✓{Style.RESET_ALL} {result['message']}")
+                click.echo(f"{Fore.CYAN}{'='*70}{Style.RESET_ALL}")
+                paper = result['paper']
+                click.echo(f"{Fore.GREEN}Title:{Style.RESET_ALL} {paper['title']}")
+                click.echo(f"{Fore.GREEN}Authors:{Style.RESET_ALL} {paper['authors']}")
+                click.echo(f"{Fore.GREEN}URL:{Style.RESET_ALL} {paper['url']}")
+                click.echo(f"{Fore.GREEN}Tags:{Style.RESET_ALL} {', '.join(result.get('tags', []))}")
+                if not read:
+                    click.echo(f"{Fore.GREEN}Priority:{Style.RESET_ALL} {result.get('priority', 'medium')}")
+                click.echo(f"{Fore.CYAN}{'='*70}{Style.RESET_ALL}\n")
+            else:
+                click.echo(f"\n{Fore.RED}✗{Style.RESET_ALL} {result['message']}\n")
+                sys.exit(1)
+    
+    except ImportError as e:
+        click.echo(f"{Fore.RED}Error:{Style.RESET_ALL} Paper skill module not available")
+        click.echo(f"Please ensure paper_skill.py and paper_fetcher.py are in the same directory")
+        sys.exit(1)
+
+
 @papers.command('add-to-read')
 @click.argument('title')
 @click.option('--authors', '-a', help='Paper authors')
@@ -307,7 +390,7 @@ def papers():
 @click.option('--tags', '-t', help='Comma-separated tags')
 @click.option('--notes', '-n', help='Initial notes')
 def add_to_read(title, authors, url, priority, tags, notes):
-    """Add a paper to your reading list"""
+    """Add a paper to your reading list (manual entry)"""
     manager = PaperManager()
     
     tag_list = [t.strip() for t in tags.split(',') if t.strip()] if tags else []
