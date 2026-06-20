@@ -2,6 +2,16 @@
 
 A personal research organization system with AI-agent-friendly tools for managing papers, notes, and research activities.
 
+## 🔒 Privacy-First Architecture
+
+ResearchSpace is designed to keep your research data private:
+
+- **This repository contains only the tools and skills** - no personal research data
+- **Your data stays in your private repository** - use ResearchSpace as a git submodule
+- **Clear separation** - Tools are public, your notes and papers remain private
+
+[→ Learn how to set up with a private repository](paper_management/DATA_DIRECTORIES.md)
+
 ## 🗂️ Tools
 
 ### 📚 [Paper Management](paper_management/)

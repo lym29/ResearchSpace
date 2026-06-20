@@ -2,6 +2,20 @@
 
 An agent-friendly paper management system that automatically fetches and organizes research papers from various sources.
 
+## ⚠️ Setup Required
+
+This tool requires data directories that are **not included in this repository** for privacy. 
+
+[→ See DATA_DIRECTORIES.md for setup instructions](DATA_DIRECTORIES.md)
+
+**Quick setup:**
+```bash
+mkdir -p paper_management/notes paper_management/papers
+echo "[]" > paper_management/papers/read.json
+echo "[]" > paper_management/papers/to_read.json  
+echo "[]" > paper_management/papers/paper_todos.json
+```
+
 ## Overview
 
 The Paper Management Skill transforms paper organization from a manual process into an automated workflow. Simply provide any of the following, and the system will automatically fetch metadata, suggest tags, and organize the paper:
