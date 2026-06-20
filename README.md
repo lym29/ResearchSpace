@@ -50,22 +50,33 @@ python research.py todos complete "Attention" 0
 
 ## 🤖 For AI Agents
 
-This repository is designed to be agent-friendly. Each tool provides:
-- Clean, documented Python APIs
-- CLI interfaces for quick operations
-- Comprehensive documentation with usage examples
-- Standardized error handling
+This repository is designed to be agent-friendly with **Cursor Skills** for automatic discovery:
 
-**Example - Paper Management Skill:**
+### 📝 Available Skills (`.cursor/skills/`)
+
+- **`add-research-paper`** - Add papers from arXiv, HuggingFace, BibTeX, or by name
+- **`manage-paper-todos`** - Create and track reading TODO lists for papers
+
+Agents can discover and use these skills automatically! Just ask naturally:
+- "Add this paper: https://arxiv.org/abs/1706.03762"
+- "Create a reading plan for the Attention paper"
+- "I finished reading the introduction, mark it complete"
+
+### Direct API Usage
+
+Each tool also provides clean Python APIs:
 ```python
 from paper_management.paper_skill import add_paper_auto
+from paper_management.paper_todo_skill import create_paper_todo
 
-# User says: "Add this paper: https://arxiv.org/abs/1706.03762"
+# Add paper
 result = add_paper_auto("https://arxiv.org/abs/1706.03762", priority="high")
 
-if result['success']:
-    print(f"Added: {result['paper']['title']}")
+# Create TODO list
+create_paper_todo(result['paper']['title'], todos=["Read intro", "Understand arch"])
 ```
+
+[→ View Cursor Skills Documentation](CURSOR_SKILLS_README.md)
 
 ## 📖 Documentation Structure
 
