@@ -6,7 +6,7 @@ An agent-friendly paper management system that automatically fetches and organiz
 
 This tool requires data directories that are **not included in this repository** for privacy. 
 
-[→ See DATA_DIRECTORIES.md for setup instructions](DATA_DIRECTORIES.md)
+[→ See SETUP_GUIDE.md for setup instructions](SETUP_GUIDE.md)
 
 **Quick setup:**
 ```bash

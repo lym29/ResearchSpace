@@ -88,7 +88,7 @@ ResearchSpace/
 
 Your personal research data (papers, notes, reading progress) should be stored in a **private repository**. ResearchSpace is designed to work as a submodule in your private workspace.
 
-[→ Learn how to set up with a private repository](.cursor/skills/paper-management/DATA_DIRECTORIES.md)
+[→ View setup guide](.cursor/skills/paper-management/references/SETUP_GUIDE.md)
 
 ## 💡 How Cursor Skills Work
 
