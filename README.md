@@ -9,6 +9,8 @@ ResearchSpace provides AI-ready tools for researchers using Cursor IDE. Instead 
 **Example interactions:**
 - "Add this paper: https://arxiv.org/abs/1706.03762"
 - "Create a reading plan for the Attention Is All You Need paper"
+- "I finished reading the introduction, mark it complete"
+- "Show me my reading progress dashboard"
 - "Show me all papers tagged with transformers"
 
 ## 🚀 Quick Start
@@ -45,14 +47,15 @@ git clone https://github.com/lym29/ResearchSpace.git ~/.cursor/skills/research
 
 ### Paper Management (`paper-management`)
 
-Automatically fetch and organize research papers from various sources.
+Complete research paper management with reading plans and progress tracking.
 
-**What it does:**
-- Fetches paper metadata from arXiv, HuggingFace, and more
-- Auto-suggests relevant tags based on content
-- Manages reading lists with priorities
-- Creates TODO lists for papers
-- Tracks reading progress
+**Features:**
+- 📄 **Paper Organization**: Fetch metadata from arXiv, HuggingFace, BibTeX
+- 🏷️ **Smart Tagging**: Auto-suggests relevant tags based on content
+- 📋 **Reading Lists**: Manage papers with priorities (high/medium/low)
+- ✅ **TODO Lists**: Create structured reading plans for each paper
+- 📊 **Progress Tracking**: Track completion of reading tasks
+- 🎨 **Visual Dashboard**: Generate beautiful HTML dashboard of your progress
 
 **Sources supported:**
 - arXiv URLs or IDs
@@ -64,7 +67,8 @@ Automatically fetch and organize research papers from various sources.
 - "Add the Attention Is All You Need paper to my reading list"
 - "I need to read https://arxiv.org/abs/2303.08774, mark it as high priority"
 - "Create a TODO list for studying the Transformer paper"
-- "Mark the introduction of the Attention paper as complete"
+- "I finished reading the introduction, mark it complete"
+- "Generate a dashboard to see my reading progress"
 
 [→ View full skill documentation](.cursor/skills/paper-management/SKILL.md)
 
