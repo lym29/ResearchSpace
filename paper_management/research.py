@@ -51,10 +51,24 @@ class PaperManager:
         with open(filepath, 'w', encoding='utf-8') as f:
             json.dump(papers, f, indent=2, ensure_ascii=False)
     
+    def _regenerate_dashboard(self):
+        """Regenerate the HTML dashboard after changes"""
+        try:
+            import subprocess
+            dashboard_script = BASE_DIR / "generate_dashboard.py"
+            if dashboard_script.exists():
+                subprocess.run([sys.executable, str(dashboard_script)], 
+                             cwd=str(BASE_DIR.parent), 
+                             capture_output=True, 
+                             timeout=10)
+        except Exception:
+            pass
+    
     def save(self):
         """Save both lists"""
         self._save_papers(self.to_read, TO_READ_FILE)
         self._save_papers(self.read, READ_FILE)
+        self._regenerate_dashboard()
     
     def find_paper(self, title: str, list_name: str = None) -> tuple:
         """Find paper by title in specified list or both
@@ -792,6 +806,42 @@ def todo_stats(title):
         click.echo(f"Progress: {stats['completed']}/{stats['total']} ({stats['progress']:.0f}%)")
         click.echo(f"Remaining: {stats['remaining']}")
         click.echo()
+
+
+@cli.command('dashboard')
+def generate_dashboard():
+    """Generate/update the reading progress HTML dashboard"""
+    import subprocess
+    
+    dashboard_script = BASE_DIR / "generate_dashboard.py"
+    
+    if not dashboard_script.exists():
+        click.echo(f"{Fore.RED}✗{Style.RESET_ALL} Dashboard script not found")
+        sys.exit(1)
+    
+    try:
+        result = subprocess.run(
+            [sys.executable, str(dashboard_script)],
+            cwd=str(BASE_DIR.parent),
+            capture_output=True,
+            text=True,
+            timeout=10
+        )
+        
+        if result.returncode == 0:
+            click.echo(f"{Fore.GREEN}✓{Style.RESET_ALL} Dashboard generated successfully")
+            click.echo(f"\nOpen {Fore.CYAN}reading_progress.html{Style.RESET_ALL} in your browser to view your progress!")
+        else:
+            click.echo(f"{Fore.RED}✗{Style.RESET_ALL} Failed to generate dashboard")
+            if result.stderr:
+                click.echo(result.stderr)
+            sys.exit(1)
+    except subprocess.TimeoutExpired:
+        click.echo(f"{Fore.RED}✗{Style.RESET_ALL} Dashboard generation timed out")
+        sys.exit(1)
+    except Exception as e:
+        click.echo(f"{Fore.RED}✗{Style.RESET_ALL} Error: {str(e)}")
+        sys.exit(1)
 
 
 if __name__ == '__main__':
