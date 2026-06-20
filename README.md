@@ -20,7 +20,7 @@ Intelligent paper organization system with automatic metadata fetching from arXi
 
 **Structure:**
 - **Skill Definition**: `.cursor/skills/paper-management/SKILL.md` - Instructions for AI agents
-- **Scripts**: `.cursor/skills/paper-management/scripts/` (aliased as `paper_management/`)
+- **Scripts**: `.cursor/skills/paper-management/scripts/` - Python implementation
 - **Documentation**: Available in the scripts folder
 
 **Features:**
@@ -35,29 +35,27 @@ Intelligent paper organization system with automatic metadata fetching from arXi
 **Quick Start:**
 ```bash
 # Install dependencies (from workspace root)
-pip install -r paper_management/requirements.txt
+pip install -r .cursor/skills/paper-management/scripts/requirements.txt
 
 # Add a paper
-python paper_management/research.py papers add "https://arxiv.org/abs/1706.03762"
+python .cursor/skills/paper-management/scripts/research.py papers add "https://arxiv.org/abs/1706.03762"
 
 # Create a TODO list for reading
-python paper_management/research.py todos create "Attention Is All You Need"
-python paper_management/research.py todos add "Attention" "Read the introduction"
-python paper_management/research.py todos complete "Attention" 0
+python .cursor/skills/paper-management/scripts/research.py todos create "Attention Is All You Need"
 
 # Generate HTML dashboard
-python paper_management/research.py dashboard
+python .cursor/skills/paper-management/scripts/research.py dashboard
 # Open reading_progress.html in your browser!
 ```
 
-[→ View Paper Management Documentation](paper_management/README.md)  
-[→ View TODO List Skill Documentation](paper_management/TODO_SKILL_README.md)  
+[→ View Paper Management Documentation](.cursor/skills/paper-management/scripts/README.md)  
+[→ View TODO List Skill Documentation](.cursor/skills/paper-management/scripts/TODO_SKILL_README.md)  
 [→ View Cursor Skill Definition](.cursor/skills/paper-management/SKILL.md)
 
 ## 🚀 Quick Navigation
 
 - **Cursor Skills**: [`.cursor/skills/`](.cursor/skills/) - AI agent skill definitions
-- **Paper Management Scripts**: [`paper_management/`](paper_management/) - Track and organize research papers
+- **Paper Management Scripts**: [`.cursor/skills/paper-management/scripts/`](.cursor/skills/paper-management/scripts/) - Implementation code
 - **Roadmap**: [`ROADMAP.md`](ROADMAP.md) - Future features and development plans
 - **Setup Guide**: [`.cursor/skills/paper-management/DATA_DIRECTORIES.md`](.cursor/skills/paper-management/DATA_DIRECTORIES.md) - Private repo setup instructions
 
@@ -95,8 +93,11 @@ This repository is designed to be agent-friendly with **Cursor Skills** for auto
 The paper management system also provides clean Python APIs for programmatic use:
 
 ```python
-from paper_management.paper_skill import add_paper_auto
-from paper_management.paper_todo_skill import create_paper_todo
+import sys
+sys.path.insert(0, '.cursor/skills/paper-management/scripts')
+
+from paper_skill import add_paper_auto
+from paper_todo_skill import create_paper_todo
 
 # Add paper
 result = add_paper_auto("https://arxiv.org/abs/1706.03762", priority="high")
@@ -104,6 +105,8 @@ result = add_paper_auto("https://arxiv.org/abs/1706.03762", priority="high")
 # Create TODO list
 create_paper_todo(result['paper']['title'], todos=["Read intro", "Understand arch"])
 ```
+
+**Note**: For AI agents using Cursor, the skill is automatically available - no manual imports needed!
 
 [→ View Skill Documentation](.cursor/skills/paper-management/SKILL.md)
 
@@ -123,7 +126,6 @@ ResearchSpace/
 │           │   ├── generate_dashboard.py
 │           │   └── requirements.txt
 │           └── references/        # API documentation
-├── paper_management/              # Symlink to scripts folder
 ├── ROADMAP.md                     # Development plans
 └── README.md                      # This file
 ```

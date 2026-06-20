@@ -2,7 +2,7 @@
 
 ## Core Function: add_paper_auto()
 
-Located in: `paper_management/paper_skill.py`
+Located in: `.cursor/skills/paper-management/scripts/paper_skill.py`
 
 ### Signature
 
@@ -127,7 +127,10 @@ Common categories that become tags:
 ### Basic Usage
 
 ```python
-from paper_management.paper_skill import add_paper_auto
+import sys
+sys.path.insert(0, '.cursor/skills/paper-management/scripts')
+
+from paper_skill import add_paper_auto
 
 result = add_paper_auto("https://arxiv.org/abs/1706.03762")
 ```
@@ -156,7 +159,10 @@ result = add_paper_auto(
 ### Preview Before Adding
 
 ```python
-from paper_management.paper_skill import search_and_preview
+import sys
+sys.path.insert(0, '.cursor/skills/paper-management/scripts')
+
+from paper_skill import search_and_preview
 
 preview = search_and_preview("1706.03762")
 if preview['success']:
@@ -198,7 +204,7 @@ for paper_input in papers:
 ### For Agents
 
 1. Always use the Python API, not CLI commands
-2. Import from `paper_management.paper_skill`
+2. Import from `.cursor/skills/paper-management/scripts/` (add to sys.path first)
 3. Handle both success and error cases
 4. Provide user feedback with paper details
 5. Infer priority from user's language ("important" → high, "interesting" → medium)
@@ -206,14 +212,13 @@ for paper_input in papers:
 ### For CLI Users
 
 ```bash
-cd paper_management
-python research.py papers add "<input>" --priority high --tags "tag1,tag2"
+python .cursor/skills/paper-management/scripts/research.py papers add "<input>" --priority high --tags "tag1,tag2"
 ```
 
 ## File Locations
 
-- Main tool: `paper_management/research.py`
-- Skill API: `paper_management/paper_skill.py`
-- Metadata fetcher: `paper_management/paper_fetcher.py`
-- Paper data: `paper_management/papers/to_read.json`, `paper_management/papers/read.json`
-- Dependencies: `paper_management/requirements.txt`
+- Main tool: `.cursor/skills/paper-management/scripts/research.py`
+- Skill API: `.cursor/skills/paper-management/scripts/paper_skill.py`
+- Metadata fetcher: `.cursor/skills/paper-management/scripts/paper_fetcher.py`
+- Paper data: User's private repo - `papers/to_read.json`, `papers/read.json` (see DATA_DIRECTORIES.md)
+- Dependencies: `.cursor/skills/paper-management/scripts/requirements.txt`
