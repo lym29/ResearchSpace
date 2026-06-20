@@ -1,11 +1,11 @@
 ---
 name: paper-management
-description: Use this skill when the user asks to add, organize, or manage research papers. Supports arXiv URLs/IDs, HuggingFace paper links, BibTeX entries, and paper names. Automatically fetches metadata including title, authors, abstract, and suggests relevant tags.
+description: Use this skill when the user asks to add, organize, or manage research papers. Supports arXiv URLs/IDs, HuggingFace paper links, BibTeX entries, and paper names. Automatically fetches metadata, creates reading TODO lists, tracks progress, and generates visual dashboards.
 ---
 
 # Paper Management Skill
 
-This skill helps you automatically add and organize research papers by fetching metadata from various sources.
+This skill helps you automatically add and organize research papers, create reading plans with TODO lists, track your progress, and visualize everything in an interactive dashboard.
 
 ## When to Use This Skill
 
@@ -16,6 +16,10 @@ Use this skill when the user:
 - Asks to add a paper by name
 - Wants to organize their research papers
 - Requests paper metadata to be fetched automatically
+- **Wants to create a reading plan or TODO list for a paper**
+- **Asks to track reading progress**
+- **Wants to mark paper tasks as complete**
+- **Requests a visual dashboard of their reading progress**
 
 ## Supported Input Types
 
@@ -144,6 +148,95 @@ for paper_input in papers:
     result = add_paper_auto(paper_input)
     print(f"{'✓' if result['success'] else '✗'} {result['message']}")
 ```
+
+### Pattern 5: Create Reading Plan with TODOs
+
+**User:** "Create a reading plan for the Transformer paper"
+
+**Action:**
+```python
+from paper_todo_skill import create_paper_todo
+
+result = create_paper_todo(
+    "Attention Is All You Need",
+    todos=[
+        "Read abstract and introduction",
+        "Understand the transformer architecture",
+        "Study multi-head attention mechanism",
+        "Review experimental results"
+    ]
+)
+print(f"Created TODO list: {len(result['todos'])} items")
+```
+
+### Pattern 6: Track Reading Progress
+
+**User:** "I finished reading the introduction of the Attention paper"
+
+**Action:**
+```python
+from paper_todo_skill import mark_todo_complete
+
+result = mark_todo_complete(
+    "Attention Is All You Need",
+    "Read abstract and introduction"
+)
+print(f"✓ Marked complete: {result['completed_item']}")
+```
+
+### Pattern 7: Add More Tasks
+
+**User:** "Add a task to implement the model in PyTorch"
+
+**Action:**
+```python
+from paper_todo_skill import add_todo_item
+
+result = add_todo_item(
+    "Attention Is All You Need",
+    "Implement a simple transformer in PyTorch"
+)
+print(f"Added new TODO item")
+```
+
+### Pattern 8: Generate Visual Dashboard
+
+**User:** "Show me my reading progress" or "Generate a dashboard"
+
+**Action:**
+```python
+import subprocess
+import sys
+
+dashboard_script = ".cursor/skills/paper-management/scripts/generate_dashboard.py"
+subprocess.run([sys.executable, dashboard_script])
+print("Dashboard generated at: reading_progress.html")
+print("Open this file in your browser to view your progress")
+```
+
+## Features
+
+### 1. Paper Management
+- Add papers from arXiv, HuggingFace, BibTeX, or by name
+- Automatic metadata fetching (title, authors, abstract, tags)
+- Priority levels (high/medium/low)
+- Reading list organization
+- Full-text search capabilities
+
+### 2. TODO List Management
+- Create reading plans for papers
+- Break down papers into manageable tasks
+- Track completion status
+- Add/remove/update tasks dynamically
+- View progress statistics
+
+### 3. Visual Dashboard
+- Interactive HTML dashboard
+- See all papers and their progress at a glance
+- TODO completion percentages
+- Priority indicators
+- Tag-based organization
+- Auto-regenerates when TODOs are updated
 
 ## Options
 
