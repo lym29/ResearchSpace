@@ -84,11 +84,13 @@ ResearchSpace/
 
 ## 🔒 Data Privacy
 
-**Important:** This repository contains only the *skills* (tools), not your research data.
+Your research data is yours alone. We recommend:
 
-Your personal research data (papers, notes, reading progress) should be stored in a **private repository**. ResearchSpace is designed to work as a submodule in your private workspace.
+- Store data in a **private Git repository** (separate from this public skills repo)
+- Use **git submodules** to include ResearchSpace skills in your private workspace
+- Add data directories to your `.gitignore` if you don't want to version them
 
-[→ View setup guide](.cursor/skills/paper-management/references/SETUP_GUIDE.md)
+[→ View skill documentation](.cursor/skills/paper-management/SKILL.md)
 
 ## 💡 How Cursor Skills Work
 
@@ -143,9 +145,8 @@ Each skill is modular and independent, making it easy to contribute!
 
 ## 📖 Learn More
 
-- [Paper Management Skill Documentation](.cursor/skills/paper-management/references/README.md)
+- [Paper Management Skill Documentation](.cursor/skills/paper-management/SKILL.md)
 - [API Reference](.cursor/skills/paper-management/references/api_reference.md)
-- [Usage Examples](.cursor/skills/paper-management/references/USAGE_EXAMPLES.md)
 - [Cursor Skills Documentation](https://cursor.com/docs/context/skills)
 
 ## 📄 License

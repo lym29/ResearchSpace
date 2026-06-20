@@ -163,8 +163,7 @@ Common errors and how to handle them:
 
 ## Important Notes
 
-- **Structure**: Scripts are in `.cursor/skills/paper-management/scripts/`
-- **Data Directories**: This repo contains only tools. See `references/SETUP_GUIDE.md` for configuring data storage
+- **Data Directories**: Create `papers/` and `notes/` folders in your workspace with JSON files for data storage
 - **Running**: Always run scripts from workspace root using full path to scripts directory
 - **Internet**: The skill requires internet access to fetch metadata from arXiv API
 - **BibTeX**: BibTeX entries with arXiv URLs will fetch additional metadata from arXiv
