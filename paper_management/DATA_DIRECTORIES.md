@@ -60,8 +60,18 @@ If not using submodules:
 - **Separation**: Clear boundary between tools (public) and data (private)
 - **Flexibility**: Can use the same skills across multiple private repos
 
+## Example Files
+
+ResearchSpace provides example templates for setting up your private repository:
+
+- `example_private_repo.gitignore` - Example .gitignore for your private repo
+- `example_private_repo_README.md` - Example README for your private repo
+- `PRIVATE_REPO_GUIDE.md` - Complete setup and usage guide
+- `SETUP_PRIVATE_REPO.sh` - Automated setup script
+
 ## Notes
 
 - The data directories will be automatically ignored by git in ResearchSpace
 - Make sure to back up your private repository regularly
 - You can customize the skills in your private repo by creating a fork
+- When running scripts, always run from the root of your private repository
