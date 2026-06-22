@@ -49,17 +49,11 @@ class PaperTodoManager:
         self.todos = self._load_todos()
     
     def _regenerate_dashboard(self):
-        """Regenerate the HTML dashboard after changes"""
+        """Regenerate dashboard files and ensure the live server is running."""
         try:
-            import subprocess
-            dashboard_script = SCRIPTS_DIR / "generate_dashboard.py"
-            if dashboard_script.exists():
-                subprocess.run(
-                    [sys.executable, str(dashboard_script)],
-                    cwd=str(WORKSPACE_ROOT),
-                    capture_output=True,
-                    timeout=10,
-                )
+            from dashboard_service import sync_dashboard
+
+            sync_dashboard(start_server=True)
         except Exception:
             pass
     
@@ -208,6 +202,44 @@ class PaperTodoManager:
             return (False, f"TODO item not found: {todo_text}", paper_key)
         
         return (False, "Must specify either todo_text or todo_index", paper_key)
+    
+    def update_todo_item(self, paper_title: str, todo_index: int, new_text: str) -> tuple:
+        """Update a TODO item's text"""
+        paper_key = self.find_paper_key(paper_title)
+
+        if not paper_key:
+            return (False, f"No TODO list found for paper: {paper_title}", None)
+
+        todos = self.todos[paper_key]["todos"]
+        if not (0 <= todo_index < len(todos)):
+            return (False, f"Invalid TODO index: {todo_index}", paper_key)
+
+        new_text = new_text.strip()
+        if not new_text:
+            return (False, "Task cannot be empty", paper_key)
+
+        todos[todo_index]["task"] = new_text
+        self._save_todos()
+        return (True, f"Updated TODO: {new_text}", paper_key)
+
+    def toggle_todo(self, paper_title: str, todo_index: int) -> tuple:
+        """Toggle a TODO item between complete and incomplete"""
+        paper_key = self.find_paper_key(paper_title)
+
+        if not paper_key:
+            return (False, f"No TODO list found for paper: {paper_title}", None)
+
+        todos = self.todos[paper_key]["todos"]
+        if not (0 <= todo_index < len(todos)):
+            return (False, f"Invalid TODO index: {todo_index}", paper_key)
+
+        if todos[todo_index]["completed"]:
+            success, message, paper_key = self.mark_incomplete(
+                paper_title, todo_index=todo_index
+            )
+            return success, message, paper_key, None
+
+        return self.mark_complete(paper_title, todo_index=todo_index)
     
     def get_todos(self, paper_title: str = None) -> Dict:
         """Get TODO list(s)

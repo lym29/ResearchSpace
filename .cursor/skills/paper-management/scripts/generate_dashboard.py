@@ -15,6 +15,7 @@ from paths import (
     NOTES_DIR,
     DASHBOARD_FILE,
 )
+from dashboard_data import load_dashboard_data, calculate_paper_progress
 
 
 def load_json(filepath):
@@ -70,23 +71,16 @@ def calculate_progress(paper_title, paper_todos):
 def generate_html():
     """Generate the HTML dashboard."""
     
-    # Load data
-    to_read = load_json(str(TO_READ_FILE))
-    read = load_json(str(READ_FILE))
-    paper_todos = load_json(str(PAPER_TODOS_FILE))
-    
-    # Calculate statistics
-    total_papers = len(to_read) + len(read)
-    papers_read = len(read)
-    papers_to_read = len(to_read)
-    
-    # Calculate total todos
-    total_todos = 0
-    completed_todos = 0
-    for paper_data in paper_todos.values():
-        todos = paper_data.get('todos', [])
-        total_todos += len(todos)
-        completed_todos += sum(1 for todo in todos if todo.get('completed', False))
+    data = load_dashboard_data()
+    to_read = data["to_read"]
+    read = data["read"]
+    paper_todos = data["paper_todos"]
+    stats = data["stats"]
+    total_papers = stats["total_papers"]
+    papers_read = stats["papers_read"]
+    papers_to_read = stats["papers_to_read"]
+    completed_todos = stats["completed_todos"]
+    total_todos = stats["total_todos"]
     
     # Generate HTML
     html = f"""<!DOCTYPE html>
@@ -413,6 +407,15 @@ def generate_html():
             opacity: 0.5;
         }}
         
+        .banner {{
+            background: #eef2ff;
+            color: #4338ca;
+            padding: 14px 24px;
+            text-align: center;
+            font-size: 0.95em;
+            border-bottom: 1px solid #c7d2fe;
+        }}
+        
         .footer {{
             text-align: center;
             padding: 30px;
@@ -437,6 +440,12 @@ def generate_html():
         <div class="header">
             <h1>📚 Research Paper Reading Dashboard</h1>
             <p>Track your reading progress and manage your research papers</p>
+        </div>
+        
+        <div class="banner">
+            This is a read-only snapshot. For interactive editing, run:
+            <code>python .cursor/skills/paper-management/scripts/research.py serve</code>
+            and open <code>http://127.0.0.1:8765/</code>
         </div>
         
         <div class="stats">
@@ -482,7 +491,12 @@ def generate_html():
                 notes_preview = notes_preview[:200] + '...'
             
             # Get progress
-            completed, total, percentage = calculate_progress(title, paper_todos)
+            progress = calculate_paper_progress(title, paper_todos)
+            completed, total, percentage = (
+                progress["completed"],
+                progress["total"],
+                progress["percentage"],
+            )
             
             # Get note files
             note_files = get_note_files(title)
@@ -689,6 +703,7 @@ def main():
     
     print(f"Dashboard generated successfully: {DASHBOARD_FILE}")
     print("Open the file in your browser to view your reading progress!")
+    print("For interactive TODO editing, run: python research.py serve")
 
 
 if __name__ == '__main__':

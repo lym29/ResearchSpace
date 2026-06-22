@@ -57,17 +57,11 @@ class PaperManager:
             json.dump(papers, f, indent=2, ensure_ascii=False)
     
     def _regenerate_dashboard(self):
-        """Regenerate the HTML dashboard after changes"""
+        """Regenerate dashboard files and ensure the live server is running."""
         try:
-            import subprocess
-            dashboard_script = SCRIPTS_DIR / "generate_dashboard.py"
-            if dashboard_script.exists():
-                subprocess.run(
-                    [sys.executable, str(dashboard_script)],
-                    cwd=str(WORKSPACE_ROOT),
-                    capture_output=True,
-                    timeout=10,
-                )
+            from dashboard_service import sync_dashboard
+
+            sync_dashboard(start_server=True)
         except Exception:
             pass
     
@@ -849,6 +843,19 @@ def generate_dashboard():
     except Exception as e:
         click.echo(f"{Fore.RED}✗{Style.RESET_ALL} Error: {str(e)}")
         sys.exit(1)
+
+
+@cli.command('serve')
+@click.option('--host', default='127.0.0.1', show_default=True, help='Host to bind')
+@click.option('--port', '-p', default=8765, show_default=True, type=int, help='Port to bind')
+def serve_dashboard(host, port):
+    """Start the interactive reading dashboard web server"""
+    from dashboard_server import run_server
+
+    click.echo(f"{Fore.CYAN}Starting interactive dashboard...{Style.RESET_ALL}")
+    click.echo(f"Open {Fore.GREEN}http://{host}:{port}/{Style.RESET_ALL} in your browser")
+    click.echo("The server also auto-starts when you add papers or update TODOs.")
+    run_server(host=host, port=port)
 
 
 if __name__ == '__main__':

@@ -213,6 +213,8 @@ for paper_input in papers:
 
 ```bash
 python .cursor/skills/paper-management/scripts/research.py papers add "<input>" --priority high --tags "tag1,tag2"
+python .cursor/skills/paper-management/scripts/research.py dashboard   # static snapshot
+python .cursor/skills/paper-management/scripts/research.py serve       # interactive web UI
 ```
 
 ## File Locations
@@ -220,5 +222,8 @@ python .cursor/skills/paper-management/scripts/research.py papers add "<input>" 
 - Main tool: `.cursor/skills/paper-management/scripts/research.py`
 - Skill API: `.cursor/skills/paper-management/scripts/paper_skill.py`
 - Metadata fetcher: `.cursor/skills/paper-management/scripts/paper_fetcher.py`
-- Paper data: User's workspace - `papers/to_read.json`, `papers/read.json`
+- Interactive dashboard server: `.cursor/skills/paper-management/scripts/dashboard_server.py`
+- Static dashboard generator: `.cursor/skills/paper-management/scripts/generate_dashboard.py`
+- Paper data: User's workspace — `papers/to_read.json`, `papers/read.json`, `papers/paper_todos.json`
+- Static dashboard output: `reading_progress.html` (read-only snapshot)
 - Dependencies: `.cursor/skills/paper-management/scripts/requirements.txt`

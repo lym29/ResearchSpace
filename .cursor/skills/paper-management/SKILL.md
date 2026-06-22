@@ -1,6 +1,6 @@
 ---
 name: paper-management
-description: Use this skill when the user asks to add, organize, or manage research papers. Supports arXiv URLs/IDs, HuggingFace paper links, BibTeX entries, and paper names. Automatically fetches metadata, creates reading TODO lists, tracks progress, and generates visual dashboards.
+description: Use this skill when the user asks to add, organize, or manage research papers. Supports arXiv URLs/IDs, HuggingFace paper links, BibTeX entries, and paper names. Automatically fetches metadata, creates reading TODO lists, tracks progress, and serves an interactive reading dashboard via `research.py serve`.
 ---
 
 # Paper Management Skill
@@ -20,6 +20,7 @@ Use this skill when the user:
 - **Asks to track reading progress**
 - **Wants to mark paper tasks as complete**
 - **Requests a visual dashboard of their reading progress**
+- **Wants to edit TODOs or check items off in the browser**
 
 ## Supported Input Types
 
@@ -199,7 +200,7 @@ result = add_todo_item(
 print(f"Added new TODO item")
 ```
 
-### Pattern 8: Generate Visual Dashboard
+### Pattern 8: Generate Visual Dashboard (Read-Only Snapshot)
 
 **User:** "Show me my reading progress" or "Generate a dashboard"
 
@@ -209,10 +210,40 @@ import subprocess
 import sys
 
 dashboard_script = ".cursor/skills/paper-management/scripts/generate_dashboard.py"
-subprocess.run([sys.executable, dashboard_script])
+subprocess.run([sys.executable, dashboard_script], cwd=".")
 print("Dashboard generated at: reading_progress.html")
-print("Open this file in your browser to view your progress")
+print("This is a read-only snapshot.")
+print("For interactive TODO editing, run: python .cursor/skills/paper-management/scripts/research.py serve")
 ```
+
+Or via CLI:
+```bash
+python .cursor/skills/paper-management/scripts/research.py dashboard
+```
+
+### Pattern 9: Interactive Dashboard (Edit TODOs in Browser)
+
+**User:** "Open my reading dashboard" or "Let me check off TODOs in the browser"
+
+**Action:**
+```bash
+python .cursor/skills/paper-management/scripts/research.py serve
+```
+
+Then tell the user to open **http://127.0.0.1:8765/** in their browser.
+
+In interactive mode, the user can:
+- Check/uncheck TODOs (saved to `papers/paper_todos.json`)
+- Edit TODO text inline
+- Add new TODOs
+- Delete TODOs
+
+Optional flags:
+```bash
+python .cursor/skills/paper-management/scripts/research.py serve --port 9000
+```
+
+**Important:** Opening `reading_progress.html` directly is read-only. Always use `research.py serve` when the user wants to edit progress in the web UI.
 
 ## Features
 
@@ -231,12 +262,22 @@ print("Open this file in your browser to view your progress")
 - View progress statistics
 
 ### 3. Visual Dashboard
-- Interactive HTML dashboard
-- See all papers and their progress at a glance
-- TODO completion percentages
-- Priority indicators
-- Tag-based organization
-- Auto-regenerates when TODOs are updated
+
+Two modes:
+
+| Mode | Command | URL / file | Editable? |
+|------|---------|------------|-----------|
+| **Interactive** (preferred for editing) | `research.py serve` | `http://127.0.0.1:8765/` | Yes |
+| **Static snapshot** | `research.py dashboard` | `reading_progress.html` | No |
+
+Interactive dashboard features:
+- Check/uncheck TODOs in the browser
+- Edit TODO text inline
+- Add and delete TODOs
+- See all papers and progress at a glance
+- TODO completion percentages and priority indicators
+- Changes persist to `papers/paper_todos.json`
+- Static `reading_progress.html` auto-regenerates when TODOs change
 
 ## Options
 
@@ -256,12 +297,16 @@ Common errors and how to handle them:
 
 ## Important Notes
 
-- **Data Directories**: Create `papers/` and `notes/` folders in your workspace with JSON files for data storage
-- **Running**: Always run scripts from workspace root using full path to scripts directory
+- **Data Directories**: User data lives at the workspace root in `papers/` and `notes/` (not inside the skill folder)
+  - `papers/to_read.json` — reading list
+  - `papers/read.json` — completed papers
+  - `papers/paper_todos.json` — TODO lists and progress
+- **Dashboard**: Use `research.py serve` for interactive editing; `reading_progress.html` is a read-only snapshot
+- **Running**: Run scripts from the workspace root using the full path to the scripts directory
 - **Internet**: The skill requires internet access to fetch metadata from arXiv API
 - **BibTeX**: BibTeX entries with arXiv URLs will fetch additional metadata from arXiv
 - **Tags**: Tag suggestions are automatic but can be extended with `additional_tags`
-- **For Agents**: Cursor AI agents automatically have access to this skill - no manual setup required
+- **For Agents**: Cursor AI agents automatically have access to this skill — no manual setup required. When the user wants browser-based TODO editing, start `research.py serve` and share the localhost URL
 
 ## Reference Files
 
@@ -275,8 +320,10 @@ See `references/` folder for:
 ✅ **Good**: User provides link → fetch metadata → add to library → confirm with details
 ✅ **Good**: User provides name → search → preview → confirm → add
 ✅ **Good**: Multiple papers → process each → report results
-✅ **Good**: Ask for priority/tags if user indicates importance
+✅ **Good**: User asks to edit TODOs in browser → run `research.py serve` → share `http://127.0.0.1:8765/`
+✅ **Good**: User asks for progress overview only → generate static dashboard or start interactive server
 
 ❌ **Avoid**: Adding papers without fetching metadata when source is available
 ❌ **Avoid**: Ignoring user's priority hints in their message
+❌ **Avoid**: Telling user to open `reading_progress.html` when they want to edit TODOs (use `research.py serve` instead)
 ❌ **Avoid**: Not confirming what was added to the user

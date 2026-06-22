@@ -14,12 +14,14 @@ env/
 # IDE
 .vscode/
 .idea/
+.obsidian/
 *.swp
 *.swo
 *~
 
 # OS
 .DS_Store
+.AppleDouble
 Thumbs.db
 
 # Research Space specific

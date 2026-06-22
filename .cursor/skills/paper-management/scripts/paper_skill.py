@@ -43,6 +43,13 @@ if str(BASE_DIR) not in sys.path:
 # Import from local directory (works for both direct execution and symlink)
 from paper_fetcher import fetch_paper_metadata, suggest_tags_from_metadata, detect_input_type
 from research import PaperManager
+from dashboard_service import get_dashboard_url
+
+
+def _with_dashboard_url(result: Dict) -> Dict:
+    if result.get("success"):
+        result["dashboard_url"] = get_dashboard_url()
+    return result
 
 
 def add_paper_auto(
@@ -124,13 +131,13 @@ def add_paper_auto(
         )
         
         if success:
-            return {
+            return _with_dashboard_url({
                 'success': True,
                 'message': f"✓ Added '{metadata['title']}' to read list",
                 'paper': metadata,
                 'input_type': input_type,
                 'tags': all_tags
-            }
+            })
         else:
             return {
                 'success': False,
@@ -150,14 +157,14 @@ def add_paper_auto(
         )
         
         if success:
-            return {
+            return _with_dashboard_url({
                 'success': True,
                 'message': f"✓ Added '{metadata['title']}' to reading list",
                 'paper': metadata,
                 'input_type': input_type,
                 'tags': all_tags,
                 'priority': priority
-            }
+            })
         else:
             return {
                 'success': False,
