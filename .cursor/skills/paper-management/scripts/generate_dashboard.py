@@ -5,9 +5,16 @@ Reads from papers/*.json and notes/ folder to create a visual progress tracker.
 """
 
 import json
-import os
 from datetime import datetime
 from pathlib import Path
+
+from paths import (
+    TO_READ_FILE,
+    READ_FILE,
+    PAPER_TODOS_FILE,
+    NOTES_DIR,
+    DASHBOARD_FILE,
+)
 
 
 def load_json(filepath):
@@ -24,8 +31,7 @@ def load_json(filepath):
 
 def get_note_files(paper_title):
     """Get note files for a paper (markdown files matching the paper title)."""
-    notes_dir = Path('paper_management/notes')
-    if not notes_dir.exists():
+    if not NOTES_DIR.exists():
         return []
     
     # Look for markdown files that might be related to this paper
@@ -38,7 +44,7 @@ def get_note_files(paper_title):
     ]
     
     note_files = []
-    for note_file in notes_dir.glob('*.md'):
+    for note_file in NOTES_DIR.glob('*.md'):
         if note_file.name in pattern_variants:
             note_files.append(note_file.name)
     
@@ -65,9 +71,9 @@ def generate_html():
     """Generate the HTML dashboard."""
     
     # Load data
-    to_read = load_json('paper_management/papers/to_read.json')
-    read = load_json('paper_management/papers/read.json')
-    paper_todos = load_json('paper_management/papers/paper_todos.json')
+    to_read = load_json(str(TO_READ_FILE))
+    read = load_json(str(READ_FILE))
+    paper_todos = load_json(str(PAPER_TODOS_FILE))
     
     # Calculate statistics
     total_papers = len(to_read) + len(read)
@@ -562,7 +568,7 @@ def generate_html():
             if note_files:
                 for note_file in note_files:
                     html += f"""
-                    <a href="paper_management/notes/{note_file}" class="notes-link">
+                    <a href="notes/{note_file}" class="notes-link">
                         📝 View Notes: {note_file}
                     </a>
 """
@@ -636,7 +642,7 @@ def generate_html():
             if note_files:
                 for note_file in note_files:
                     html += f"""
-                    <a href="paper_management/notes/{note_file}" class="notes-link">
+                    <a href="notes/{note_file}" class="notes-link">
                         📝 View Notes: {note_file}
                     </a>
 """
@@ -677,12 +683,11 @@ def main():
     """Main function to generate and save the dashboard."""
     html = generate_html()
     
-    # Save to file
-    output_file = 'reading_progress.html'
-    with open(output_file, 'w') as f:
+    DASHBOARD_FILE.parent.mkdir(parents=True, exist_ok=True)
+    with open(DASHBOARD_FILE, 'w') as f:
         f.write(html)
     
-    print(f"Dashboard generated successfully: {output_file}")
+    print(f"Dashboard generated successfully: {DASHBOARD_FILE}")
     print("Open the file in your browser to view your reading progress!")
 
 

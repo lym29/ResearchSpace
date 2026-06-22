@@ -39,7 +39,7 @@ from typing import Dict, List, Optional
 from datetime import datetime
 
 BASE_DIR = Path(__file__).parent
-PAPER_TODOS_FILE = BASE_DIR / "papers" / "paper_todos.json"
+from paths import PAPER_TODOS_FILE, SCRIPTS_DIR, WORKSPACE_ROOT
 
 
 class PaperTodoManager:
@@ -52,12 +52,14 @@ class PaperTodoManager:
         """Regenerate the HTML dashboard after changes"""
         try:
             import subprocess
-            dashboard_script = BASE_DIR / "generate_dashboard.py"
+            dashboard_script = SCRIPTS_DIR / "generate_dashboard.py"
             if dashboard_script.exists():
-                subprocess.run([sys.executable, str(dashboard_script)], 
-                             cwd=str(BASE_DIR.parent), 
-                             capture_output=True, 
-                             timeout=10)
+                subprocess.run(
+                    [sys.executable, str(dashboard_script)],
+                    cwd=str(WORKSPACE_ROOT),
+                    capture_output=True,
+                    timeout=10,
+                )
         except Exception:
             pass
     

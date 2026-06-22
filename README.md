@@ -15,18 +15,7 @@ ResearchSpace provides AI-ready tools for researchers using Cursor IDE. Instead 
 
 ## 🚀 Quick Start
 
-### Option 1: Use as Git Submodule (Recommended)
-
-Add ResearchSpace to your research workspace:
-
-```bash
-cd your-research-workspace
-git submodule add https://github.com/lym29/ResearchSpace.git .cursor/skills/research
-```
-
-Cursor will automatically discover and load these skills!
-
-### Option 2: Clone Directly
+### Clone the Repository
 
 ```bash
 git clone https://github.com/lym29/ResearchSpace.git
@@ -35,7 +24,7 @@ cd ResearchSpace
 
 Open the folder in Cursor, and the skills are ready to use.
 
-### Option 3: Global Skills (All Projects)
+### Global Skills (All Projects)
 
 Install skills globally for all your Cursor projects:
 
@@ -91,7 +80,7 @@ ResearchSpace/
 Your research data is yours alone. We recommend:
 
 - Store data in a **private Git repository** (separate from this public skills repo)
-- Use **git submodules** to include ResearchSpace skills in your private workspace
+- Clone ResearchSpace into your workspace or install skills globally (see Quick Start above)
 - Add data directories to your `.gitignore` if you don't want to version them
 
 [→ View skill documentation](.cursor/skills/paper-management/SKILL.md)

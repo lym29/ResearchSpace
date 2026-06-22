@@ -25,6 +25,7 @@ Thumbs.db
 # Research Space specific
 .notes_backup/
 
-# Private data directories (should only exist in private repos that use this as a submodule)
-paper_management/notes/
-paper_management/papers/
+# User data (stored at workspace root, not in skill folder)
+papers/
+notes/
+reading_progress.html

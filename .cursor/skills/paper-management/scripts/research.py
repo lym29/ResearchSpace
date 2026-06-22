@@ -22,10 +22,15 @@ except ImportError:
 init(autoreset=True)
 
 BASE_DIR = Path(__file__).parent
-PAPERS_DIR = BASE_DIR / "papers"
-TO_READ_FILE = PAPERS_DIR / "to_read.json"
-READ_FILE = PAPERS_DIR / "read.json"
-NOTES_DIR = BASE_DIR / "notes"
+from paths import (
+    PAPERS_DIR,
+    TO_READ_FILE,
+    READ_FILE,
+    NOTES_DIR,
+    SCRIPTS_DIR,
+    WORKSPACE_ROOT,
+    DASHBOARD_FILE,
+)
 
 
 class PaperManager:
@@ -55,12 +60,14 @@ class PaperManager:
         """Regenerate the HTML dashboard after changes"""
         try:
             import subprocess
-            dashboard_script = BASE_DIR / "generate_dashboard.py"
+            dashboard_script = SCRIPTS_DIR / "generate_dashboard.py"
             if dashboard_script.exists():
-                subprocess.run([sys.executable, str(dashboard_script)], 
-                             cwd=str(BASE_DIR.parent), 
-                             capture_output=True, 
-                             timeout=10)
+                subprocess.run(
+                    [sys.executable, str(dashboard_script)],
+                    cwd=str(WORKSPACE_ROOT),
+                    capture_output=True,
+                    timeout=10,
+                )
         except Exception:
             pass
     
@@ -813,7 +820,7 @@ def generate_dashboard():
     """Generate/update the reading progress HTML dashboard"""
     import subprocess
     
-    dashboard_script = BASE_DIR / "generate_dashboard.py"
+    dashboard_script = SCRIPTS_DIR / "generate_dashboard.py"
     
     if not dashboard_script.exists():
         click.echo(f"{Fore.RED}✗{Style.RESET_ALL} Dashboard script not found")
@@ -822,7 +829,7 @@ def generate_dashboard():
     try:
         result = subprocess.run(
             [sys.executable, str(dashboard_script)],
-            cwd=str(BASE_DIR.parent),
+            cwd=str(WORKSPACE_ROOT),
             capture_output=True,
             text=True,
             timeout=10
@@ -830,7 +837,7 @@ def generate_dashboard():
         
         if result.returncode == 0:
             click.echo(f"{Fore.GREEN}✓{Style.RESET_ALL} Dashboard generated successfully")
-            click.echo(f"\nOpen {Fore.CYAN}reading_progress.html{Style.RESET_ALL} in your browser to view your progress!")
+            click.echo(f"\nOpen {Fore.CYAN}{DASHBOARD_FILE}{Style.RESET_ALL} in your browser to view your progress!")
         else:
             click.echo(f"{Fore.RED}✗{Style.RESET_ALL} Failed to generate dashboard")
             if result.stderr:
